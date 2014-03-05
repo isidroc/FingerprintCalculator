@@ -11,7 +11,7 @@ import os,sys
 # Arguments passed to the scripts
 parser = argparse.ArgumentParser(prog='PROG',description='Get Morgan Fingerprints for compounds codified in either SMILES or SDF format using RDkit. Isidro Cortes Ciriano. August/September 2013')
 parser.add_argument('--bits', required='TRUE',type=int, help="Size of the hashed Morgan Fingerprints (binary and with counts)")
-parser.add_argument('--rad', required='TRUE', type=int, help="Maximum diameter. Deafault is two, equivalent to ECFP4 from PipelinePilot")
+parser.add_argument('--rad', required='TRUE', type=int, help="Maximum radius. Deafault is two, equivalent to ECFP4 from PipelinePilot")
 parser.add_argument('--f', required='TRUE', type=str, help="Format of the input file")
 parser.add_argument('--mols', type=str,help="File containing the molecules {.smi|.smiles|.sdf}. If the format is smiles, each line should contain the smiles and the name separated by a comma (in this order)")
 parser.add_argument('--image', action='store_true', help="Write --image if you want the images of the substructures")
