@@ -125,7 +125,7 @@ if verbose:
 		errfile="incorrect_molecules_"+outname+".csv"
 		print "This information has been saved in the following file: %s\n"%(errfile)
 		# Save the information about which molecules could not be processed correctly.
-		np.savetxt(errfile,molserr)
+		np.savetxt(errfile,molserr,fmt="%d")
 		del errfile
 	else:
 		print "All molecules in the input file were processed correctly"
