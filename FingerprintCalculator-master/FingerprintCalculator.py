@@ -96,14 +96,41 @@ if formatFile == 'smi' or formatFile == 'smiles':
 	if verbose:
 		print "Format of the main file = SMILES"
 	suppl = Chem.SmilesMolSupplier(fileMols,smilesColumn=0,nameColumn=1,delimiter=',',titleLine=False)
-	hh= [x for x in suppl]
-	nbMols=len(hh)
+	mols=[]
+	molserr=[]
+	for i,m in enumerate(suppl):
+		if m is not None:
+			mols.append(m)
+		else:
+			molserr.append(i)
+	nbMols=len(mols)
 else:
 	if verbose:
 		print "Format of the main file = SDF"
 	suppl = Chem.SDMolSupplier(fileMols)
-	hh= [ x for x in suppl]
-	nbMols=len(hh)
+	mols=[]
+	molserr=[]
+	for i,m in enumerate(suppl):
+		if m is not None:
+			mols.append(m)
+		else:
+			molserr.append(i)
+	nbMols=len(mols)
+
+if verbose: 
+	if len(molserr) !=0:
+		print "The following %d molecules (starting at zero) could not be processed:\n"%(len(molserr))
+		for x in molserr: print x
+		print "NOTE: the indexes of the molecules start at zero. Thus the first molecule is molecule 0."
+		errfile="incorrect_molecules_"+outname+".csv"
+		print "This information has been saved in the following file: %s\n"%(errfile)
+		# Save the information about which molecules could not be processed correctly.
+		np.savetxt(errfile,molserr)
+		del errfile
+	else:
+		print "All molecules in the input file were processed correctly"
+
+
 
 # External File
 if formatFileEXT:
@@ -111,19 +138,19 @@ if formatFileEXT:
 		if verbose:
 			print "Format of the external file = SMILES"
 		supplEXT = Chem.SmilesMolSupplier(fileMols,smilesColumn=0,nameColumn=1,delimiter=',',titleLine=False)
-		hhEXT= [x for x in supplEXT]
-		nbMolsEXT=len(hhEXT)
+		molsEXT= [x for x in supplEXT]
+		nbMolsEXT=len(molsEXT)
 	else:
 		if verbose:
 			print "Format of the external file = SDF"
 		supplEXT = Chem.SDMolSupplier(fileMolsEXT)
-		hhEXT= [ x for x in supplEXT]
-		nbMolsEXT=len(hhEXT)
+		molsEXT= [ x for x in supplEXT]
+		nbMolsEXT=len(molsEXT)
 
 	if verbose:
-		print 'Your molecules file has %d molecules\n' % (len(hh))
+		print 'Your molecules file has %d molecules\n' % (len(mols))
 		if formatFileEXT:
-			print 'Your external file contains %d molecules\n' % (len(hhEXT))
+			print 'Your external file contains %d molecules\n' % (len(molsEXT))
 
 #declare the vector of zeros to know which positions have appeared
 position_track=[0]*nbBits
@@ -150,23 +177,33 @@ fps_by_comp=[[]]
 for i in range(nbMols):
 	fps_by_comp[0].append([''])
 
-
 # Define the list that will contain all the submolecules
-subm_all =[]
+subm_all=[]
+# Define the list where the erroneous molecules will be saved.
+err_mols=[]
+
+# Define a progess bar
+from progressbar import *
+widgets = ['Progression: ', Percentage(), ' ', Bar(marker='.',left='[',right=']'),' ', ETA(), ' ', FileTransferSpeed()] #see docs for other options
+
+pbar = ProgressBar(widgets=widgets, maxval=nbMols)
+pbar.start()
+
 
 nbFeatTot=0
 #Loop over the molecules
-for molecule_nb,m in enumerate(hh):
+for molecule_nb,m in enumerate(mols):
 	info={}; info2={}
-	if m is None:	
+	if m is None:
 			print "Erroneous input at molecule: %d" %(molecule_nb)
+			err_mols.append(molecule_nb)
 	else:
-		if image:	
+		if image:
 			image_name="%s_Molecule_%d.pdf"%(outname,molecule_nb+1)
 			tmp=AllChem.Compute2DCoords(m)
 			Draw.MolToFile(m,image_name,size=(300,300),wedgeBonds=True,kekulize=True)
-		if verbose:
-			print "Molecule %d\n" % (molecule_nb)
+#		if verbose:
+#			print "Molecule %d\n" % (molecule_nb)
 		fp = AllChem.GetMorganFingerprintAsBitVect(m,fp_diam,nbBits,bitInfo=info) 
 		AllBits=np.asarray([info.items()[i][0] for i in range(0,len(info.items()))])
 		#diameter 2 is equal to the length 4 of ECFP-4
@@ -206,16 +243,16 @@ for molecule_nb,m in enumerate(hh):
 						Draw.MolToFile(m,image_name,size=(300,300),highlightAtoms=amap.keys())
 					if ids_now[i]  not in subm_all:
 						nbFeatTot+=1 
-						subm_all.append(ids_now[i] )
+						subm_all.append(ids_now[i])
 					# For each molecule keep the substructures
-					fps_by_comp[0][molecule_nb].append(ids_now[i] )
+					fps_by_comp[0][molecule_nb].append(ids_now[i])
 					arr2[1][bit].append(str(nbFeatTot))
 				else:
 					arr[1][bit].append(ids_now[i] )
 					if image and ids_now[i]  not in subm_all:
 						image_name="%s_Feature_%d.pdf"%(outname,nbFeatTot)
 						Draw.MolToFile(m,image_name,size=(300,300),highlightAtoms=amap.keys())
- 					if ids_now[i]  not in subm_all:
+					if ids_now[i] not in subm_all:
 						nbFeatTot+=1
 						subm_all.append(ids_now[i] )
 					fps_by_comp[0][molecule_nb].append(ids_now[i] )
@@ -275,7 +312,10 @@ for molecule_nb,m in enumerate(hh):
 		   count+=1
 		f_fp_counts.write("\n")
 
-
+# Updating the progress bar.
+	if nbMols % (1+molecule_nb) == 0:
+		pbar.update(molecule_nb)
+		print "\n"
 
 f_fp_bin.close()
 f_fp_counts.close()
@@ -357,7 +397,7 @@ if formatFileEXT:
 		fps_by_compEXT[0].append([''])
 
 #Loop over the molecules
-	for molecule_nb,m in enumerate(hhEXT):
+	for molecule_nb,m in enumerate(molsEXT):
 		infoFP={}; infoEXT={}
 		if m is None:	
 				print "Erroneous input at molecule (external file): %d" %(molecule_nb)
@@ -442,3 +482,4 @@ if formatFileEXT:
 
 if verbose:
 	print "Calculation Finished. NO problems encountered"
+
