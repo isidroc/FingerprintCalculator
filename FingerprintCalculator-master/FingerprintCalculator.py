@@ -270,33 +270,34 @@ for molecule_nb,m in enumerate(mols):
 				env=Chem.FindAtomEnvironmentOfRadiusN(m,radius,atom)
 				amap={}
 				submol=Chem.PathToSubmol(m,env,atomMap=amap)
-				if submol.GetNumAtoms() ==1: ##if len(amap)==0: # This means that the radius is zero, so the feature is a single atom
-					arr[1][bit].append(ids_now[i]) #submol
-					# Draw the feature
-					if image and ids_now[i] not in subm_all:
-						image_name="%s_Feature_%d.pdf"%(outname,nbFeatTot)
-						amap={}; amap[atom] = atom	
-						Draw.MolToFile(m,image_name,size=(300,300),highlightAtoms=amap.keys())
-						smiles_subs_kept.append(Chem.MolToSmiles(submol))
-						Atoms_subs.append(submol.GetNumAtoms())
-					if ids_now[i]  not in subm_all:
-						nbFeatTot+=1 
-						subm_all.append(ids_now[i])
-					# For each molecule keep the substructures
-					fps_by_comp[0][molecule_nb].append(ids_now[i])
-					arr2[1][bit].append(str(nbFeatTot))
+				if radius ==0: ##if len(amap)==0: # This means that the radius is zero, so the feature is a single atom
+					pass
+				#	arr[1][bit].append(ids_now[i]) #submol
+				#	# Draw the feature
+				#	if image and ids_now[i] not in subm_all:
+				#		image_name="%s_Feature_%d.pdf"%(outname,nbFeatTot)
+				#		amap={}; amap[atom] = atom	
+				#		Draw.MolToFile(m,image_name,size=(300,300),highlightAtoms=amap.keys())
+				#	smiles_subs_kept.append(Chem.MolToSmiles(submol))
+				#	Atoms_subs.append(submol.GetNumAtoms())
+				#	if ids_now[i]  not in subm_all:
+				#		nbFeatTot+=1 
+				#		subm_all.append(ids_now[i])
+				#	# For each molecule keep the substructures
+				#	fps_by_comp[0][molecule_nb].append(ids_now[i])
+				#	arr2[1][bit].append(str(nbFeatTot))
 				else:
 					arr[1][bit].append(ids_now[i] )
 					if image and ids_now[i]  not in subm_all:
 						image_name="%s_Feature_%d.pdf"%(outname,nbFeatTot)
 						Draw.MolToFile(m,image_name,size=(300,300),highlightAtoms=amap.keys())
-						smiles_subs_kept.append(Chem.MolToSmiles(submol))
-						Atoms_subs.append(submol.GetNumAtoms())
+					smiles_subs_kept.append(Chem.MolToSmiles(submol))
+					Atoms_subs.append(submol.GetNumAtoms())
 					if ids_now[i] not in subm_all:
 						nbFeatTot+=1
 						subm_all.append(ids_now[i] )
-					fps_by_comp[0][molecule_nb].append(ids_now[i] )
-					arr2[1][bit].append(str(nbFeatTot))
+					fps_by_comp[0][molecule_nb].append(ids_now[i] ) 
+					arr2[1][bit].append(str(nbFeatTot)) 
 
 
 			else: #The bit is already on!
@@ -304,37 +305,39 @@ for molecule_nb,m in enumerate(mols):
 				amap={}
 				submol=Chem.PathToSubmol(m,env,atomMap=amap)
 
-				if submol.GetNumAtoms() ==1 and ids_now[i]  not in arr[1][bit]:  ####:if len(amap)==0 and ids_now[i]  not in arr[1][bit]:
-					arr[1][bit].append(ids_now[i] )
-					if image and ids_now[i]  not in subm_all:
-						image_name="%s_Feature_%d.pdf"%(outname,nbFeatTot)
-						amap={}; amap[atom] = atom
-						Draw.MolToFile(m,image_name,size=(300,300),highlightAtoms=amap.keys())
-						smiles_subs_kept.append(Chem.MolToSmiles(submol))
-						Atoms_subs.append(submol.GetNumAtoms())
-					if ids_now[i]  not in subm_all:
-						nbFeatTot+=1
-						subm_all.append(ids_now[i] )
-					fps_by_comp[0][molecule_nb].append(ids_now[i] )
-					arr2[1][bit].append(str(nbFeatTot))
+				if radius == 0 and ids_now[i]  not in arr[1][bit]:  ####:if len(amap)==0 and ids_now[i]  not in arr[1][bit]:
+					pass
+				#	arr[1][bit].append(ids_now[i] )
+				#	if image and ids_now[i]  not in subm_all:
+				#		image_name="%s_Feature_%d.pdf"%(outname,nbFeatTot)
+				#		amap={}; amap[atom] = atom
+				#		Draw.MolToFile(m,image_name,size=(300,300),highlightAtoms=amap.keys())
+				#	smiles_subs_kept.append(Chem.MolToSmiles(submol))
+				#	Atoms_subs.append(submol.GetNumAtoms())
+				#	if ids_now[i]  not in subm_all:
+				#		nbFeatTot+=1
+				#		subm_all.append(ids_now[i])
+				#	fps_by_comp[0][molecule_nb].append(ids_now[i])
+				#	arr2[1][bit].append(str(nbFeatTot)) 
 				# We keep the all the features for each compound anyway
-				if submol.GetNumAtoms() ==1 and ids_now[i]  in arr[1][bit]: ###if len(amap)==0 and ids_now[i]  in arr[1][bit]:
-					fps_by_comp[0][molecule_nb].append(ids_now[i] )
+				if radius == 123123 and ids_now[i]  in arr[1][bit]: ###if len(amap)==0 and ids_now[i]  in arr[1][bit]:
+					pass
+					#fps_by_comp[0][molecule_nb].append(ids_now[i] )
 
 				if submol.GetNumAtoms() >1 and ids_now[i]  not in arr[1][bit]: #####len(amap)!=0 and ids_now[i]  not in arr[1][bit]:
 					arr[1][bit].append(ids_now[i] )
 					if image and ids_now[i]  not in subm_all:
 						image_name="%s_Feature_%d.pdf"%(outname,nbFeatTot)
 						Draw.MolToFile(m,image_name,size=(300,300),highlightAtoms=amap.keys())
-						smiles_subs_kept.append(Chem.MolToSmiles(submol))
-						Atoms_subs.append(submol.GetNumAtoms())
+					smiles_subs_kept.append(Chem.MolToSmiles(submol))
+					Atoms_subs.append(submol.GetNumAtoms())
 					if ids_now[i] not in subm_all:
 						nbFeatTot+=1
 						subm_all.append(ids_now[i] )
-					fps_by_comp[0][molecule_nb].append(ids_now[i] )
-					arr2[1][bit].append(str(nbFeatTot))
+					fps_by_comp[0][molecule_nb].append(ids_now[i] ) 
+					arr2[1][bit].append(str(nbFeatTot)) 
 				# We keep the all the features for each compound anyway
-				if submol.GetNumAtoms() >=1 and ids_now[i]  in arr[1][bit]: ####if len(amap)!=0 and ids_now[i]  in arr[1][bit]:
+				if submol.GetNumAtoms() >1 and ids_now[i]  in arr[1][bit]: ####if len(amap)!=0 and ids_now[i]  in arr[1][bit]:
 					fps_by_comp[0][molecule_nb].append(ids_now[i] )
 
 		 # Print the features in the corresponding files
@@ -365,7 +368,7 @@ for molecule_nb,m in enumerate(mols):
 f_fp_bin.close()
 f_fp_counts.close()
 
-fp_per_bit=outname+'features_per_bit_hashed_fp.csv'
+fp_per_bit=outname+'_features_per_bit_hashed_fp.csv'
 if os.path.exists(fp_per_bit):
 	os.remove(fp_per_bit)
 
@@ -406,13 +409,13 @@ if unhashed:
 ###############################
 # Write the smiles for the substructures
 ###############################
-toms_subs.append(submol.GetNumAtoms())
 
 filename = outname+"_smiles_substructures.csv"
 f = open(filename,'w')
 dat = 'Substructure_ID\tSmiles'
+f.write(dat)
 for i,m in enumerate(smiles_subs_kept):
-	dat = str(Atoms_subs[i])+'\t'+str(m)+'\n'
+	dat = str(Atoms_subs[i])+'\t'+m+'\n'
 	f.write(dat)
 f.close()
 ###############################
