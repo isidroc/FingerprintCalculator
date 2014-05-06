@@ -466,8 +466,8 @@ if formatFileEXT:
 # Open File
 ###############################
 # Open the files where the fingerprints will be kept:
-	binaryEXT=outname+"_hashed_binaryEXT.csv"
-	countsEXT=outname+"_hashed_countsEXT.csv"
+	binaryEXT=outname+"_hashed_binary_EXT.csv"
+	countsEXT=outname+"_hashed_counts_EXT.csv"
 	if os.path.exists(binaryEXT):
 		os.remove(binaryEXT)
 	f_fp_binEXT=open(binaryEXT,'w')
@@ -572,8 +572,8 @@ if formatFileEXT:
 					FPS_EXT[i][j]=0
 					FPS_countsEXT[i][j]=0
 
-		outEXTbinary=outname+"unhashed_binary.csv"
-		outEXTcounts=outname+"unhashed_counts.csv"
+		outEXTbinary=outname+"_unhashed_binary_EXT.csv"
+		outEXTcounts=outname+"_unhashed_counts_EXT.csv"
 #		np.save("unhashed_binary.npy",FPS_EXT)
 #		np.save("unhashed_counts.npy",FPS_countsEXT)
 		np.savetxt(outEXTbinary, FPS_EXT, fmt='%1s', delimiter=',', newline='\n')
