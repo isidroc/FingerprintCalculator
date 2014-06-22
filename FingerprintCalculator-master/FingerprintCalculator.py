@@ -106,7 +106,7 @@ def RetrieveMol2Block(fileLikeObject, delimiter="@<TRIPOS>MOLECULE"):
 	for line in fileLikeObject:
 		if line.startswith(delimiter) and mol2:
 			yield "".join(mol2)
-			#mol2 = []
+			mol2 = []
 		mol2.append(line)
 	if mol2:
 		yield "".join(mol2)
