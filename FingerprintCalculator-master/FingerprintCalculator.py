@@ -412,6 +412,7 @@ fp_per_bit=outname+'_features_per_bit_hashed_fp.csv'
 if os.path.exists(fp_per_bit):
 	os.remove(fp_per_bit)
 
+
 f=open(fp_per_bit,'w')
 for i in arr2[0]:
      if arr2[1][i]==['']:
@@ -452,10 +453,10 @@ if unhashed:
 
 filename = outname+"_smiles_substructures.smi"
 f = open(filename,'w')
-dat = 'Substructure_ID\tSmiles\n'
+dat = 'Substructure_ID\tNum_Atoms\tSmiles\n'
 f.write(dat)
 for i,m in enumerate(smiles_subs_kept):
-	dat = str(Atoms_subs[i])+'\t'+m+'\n'
+	dat = i+'\t'+str(Atoms_subs[i])+'\t'+m+'\n'
 	f.write(dat)
 f.close()
 ###############################
