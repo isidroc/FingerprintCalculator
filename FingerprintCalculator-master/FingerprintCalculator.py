@@ -45,12 +45,13 @@ unhashed=args['unhashed']
 radii=args['radii']
 radii = [int(x) for x in radii]
 verbose=args['v']
-formatFile=args['f']
+				formatFile=args['f']
 fileMols=str(args['mols'])
 nbBits=int(args['bits'])
 fp_diam=int(args['rad'])
+
 # External file.
-formatFileEXT=args['extF']
+		formatFileEXT=args['extF']
 fileMolsEXT=str(args['molsEXT'])
 unhashedEXT=args['unhashedEXT']
 RDkitPath=args['f']
