@@ -22,9 +22,13 @@ import sys
 parser = _ArgumentParser(prog='PROG',description='Get Morgan Fingerprints for compounds codified in either SMILES or SDF format using RDkit. Isidro Cortes Ciriano. August/September 2013')
 parser.add_argument('-bits', required='TRUE',type=int, help="Size of the hashed Morgan Fingerprints (binary and with counts)")
 parser.add_argument('-radii', nargs="+", type=int, required='TRUE',help="Radii to be considered for the calculation of the fingerprints")
+#parser.add_argument('-rad', required='TRUE', type=int, help="Maximum radius of the substructures. Deafault is two, equivalent to ECFP4 from PipelinePilot")
+#parser.add_argument('--f', required='TRUE', type=str, help="Format of the input file")
 parser.add_argument('-mols', type=str,help="File containing the molecules {.smi|.smiles|.sdf|.mol2}. If the format is smiles, each line should contain the smiles and the name separated by a comma (in this order)")
 parser.add_argument('-image', action='store_true', help="Write --image if you want the images of the substructures")
 parser.add_argument('-unhashed', action='store_true', help="Write --unhashed if you want the unhashed fingerprints")
+#parser.add_argument('-v', action='store_true', help="Verbose")
+#parser.add_argument('--extF',type=str, help="Type -extF followed by the format {.smi|.smiles|.sdf} of the external file for which you want to calculate HASHED circular fingerprints")
 parser.add_argument('-molsEXT',type=str,help="External file")
 parser.add_argument('-unhashedEXT', action='store_true', help="Write --unhashedEXT if you want the unhashed fingerprints for the external file. The substructures of the molecules in the external file will be compared to the pool of substructures contained in the molecules of the main file")
 parser.add_argument('-RDkitPath', required='TRUE', type=str, help="Path to the directory where the RDkit files are")
@@ -35,16 +39,28 @@ args = vars(parser.parse_args())
 image=args['image']
 unhashed=args['unhashed']
 nbBits=int(args['bits'])
+#radii=args['radii']
 radii = list(args['radii'])
+#radii = [int(x) for x in radii]
+#verbose=args['v']
+#formatFile=args['f']
 fileMols=str(args['mols'])
+#fp_diam=int(args['rad'])
 
 # External file.
+#formatFileEXT=args['extF']
 fileMolsEXT=args['molsEXT']
 unhashedEXT=args['unhashedEXT']
 RDkitPath=args['RDkitPath']
 outname=args['output']
 sys.path.append(RDkitPath)
 
+#if verbose:
+#    if image:
+#        print "\nCalculation of Morgan Fingerprints with diameter %d hashed into a fingerprint size equal to %d.\nMolecules file: %s.\nImages for the chemical substructures will be created.\n" %(max(args['radii']),args['bits'],args['mols'])
+#    else :
+#        print "\nCalculation of Morgan Fingerprints with diameter %d hashed into a fingerprint size equal to %d.\nMolecules file: %s.\nNO Images for the chemical substructures will be created.\n" %(args['rad'],args['bits'],args['mols'])
+#
 #############
 # Classes
 #############
@@ -318,6 +334,7 @@ if fileMolsEXT is None:
 			_savetxt(fpcounts,calc_fps_no_reference_keys.fps_unhashed_counts,delimiter=',',fmt="%d")
 			# save the smiles and the substructures
 			fname=outname+'_substructure_smiles.csv'
+			#XX _savetxt(fname,calc_fps_no_reference_keys.substructures_smiles,delimiter="\t")
 			outfile = open(fname, 'w' )
 			for key, value in sorted(calc_fps_no_reference_keys.substructures_smiles.items() ):
 				outfile.write( str(key) + '\t' + str(value) + '\n' )
@@ -338,6 +355,7 @@ if fileMolsEXT is None:
 			_savetxt(fpcounts,calc_fps_no_reference_keys.fps_unhashed_counts,delimiter=',',fmt="%d")
 			# save the smiles and the substructures
 			fname=outname+'_substructure_smiles.csv'
+			#XX _savetxt(fname,calc_fps_no_reference_keys.substructures_smiles,delimiter="\t")
 			outfile = open(fname, 'w' )
 			for key, value in sorted(calc_fps_no_reference_keys.substructures_smiles.items() ):
 				outfile.write( str(key) + '\t' + str(value) + '\n' )
@@ -348,6 +366,7 @@ if fileMolsEXT is None:
 			for key, value in sorted(calc_fps_no_reference_keys.substructure_dictionary.items() ):
 				outfile.write( str(key) + '\t' + str(value) + '\n' )
 			outfile.close()
+			#XX _savetxt(fname,calc_fps_no_reference_keys.substructure_dictionary,delimiter="\t")
 			# save column names, i.e. to which substructure a column belongs
 			fname=outname+'_fps_unhashed_columns.csv'
 			_savetxt(fname,calc_fps_no_reference_keys.columns_unhashed,delimiter="\t",fmt="%d")
@@ -379,6 +398,7 @@ else:
 				_savetxt(fpbinary,calc_fps_w_reference_keys.fps_unhashed_binary,delimiter=',',fmt="%d")
 				_savetxt(fpcounts,calc_fps_w_reference_keys.fps_unhashed_counts,delimiter=',',fmt="%d")
 				fname=outname+'_substructure_smiles_EXT.csv'
+				#XX _savetxt(fname,calc_fps_no_reference_keys.substructures_smiles,delimiter="\t")
 				outfile = open(fname, 'w' )
 				for key, value in sorted(calc_fps_w_reference_keys.substructures_smiles.items() ):
 					outfile.write( str(key) + '\t' + str(value) + '\n' )
@@ -399,6 +419,7 @@ else:
 				savetxt(fpbinary,calc_fps_w_reference_keys.fps_unhashed_binary,delimiter=',',fmt="%d")
 				_savetxt(fpcounts,calc_fps_w_reference_keys.fps_unhashed_counts,delimiter=',',fmt="%d")
 				fname=outname+'_substructure_smiles_EXT.csv'
+				#XX _savetxt(fname,calc_fps_no_reference_keys.substructures_smiles,delimiter="\t")
 				outfile = open(fname, 'w' )
 				for key, value in sorted(calc_fps_w_reference_keys.substructures_smiles.items() ):
 					outfile.write( str(key) + '\t' + str(value) + '\n' )
