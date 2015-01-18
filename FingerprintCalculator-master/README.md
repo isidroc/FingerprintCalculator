@@ -1,4 +1,0 @@
-FingerprintCalculator
-=====================
-
-Morgan Fingerprint Calculator
