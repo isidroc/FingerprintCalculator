@@ -18,7 +18,7 @@ chemical space if used in predictive modelling studies (e.g. http://www.jcheminf
 
 Please contact me for further details, feedback or help. Thanks !
 
-Examples
+Example
 =====================
 
 ./FingerprintCalculator.py -bits 256 -radii 1 2 3 -mols compounds.sdf -output compound_fps -RDkitPath $RDBASE   
