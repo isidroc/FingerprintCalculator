@@ -17,3 +17,8 @@ at each position, thus enabling the explanation of the fingerprints and the deco
 chemical space if used in predictive modelling studies (e.g. http://www.jcheminf.com/content/7/1/1/abstract).
 
 Please contact me for further details, feedback or help. Thanks !
+
+Examples
+=====================
+
+./FingerprintCalculator.py -bits 256 -radii 1 2 3 -mols compounds.sdf -output compound_fps -RDkitPath $RDBASE   
